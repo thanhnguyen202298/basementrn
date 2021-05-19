@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import 'react-native-gesture-handler'
 import {
     Button, SafeAreaView, ScrollView, StatusBar, StyleSheet,
-    Text, useColorScheme, View, Image, Dimensions
+    Text, useColorScheme, View, Image, Dimensions,
+    Animated, LayoutAnimationAnim
 } from 'react-native'
+import AO from './objectAnalysis'
 
 
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view'
@@ -85,25 +87,27 @@ export function Detail(props: any) {
     )
 }
 
-export const Page2 = (props:any) => {
+export const Page2 = (props: any) => {
     return (
-        <Text style={{ backgroundColor: '#33ffff', flex: 1, alignItems: 'center' }}>trang 2</Text>
+        <Text style={{ backgroundColor: '#33ffff', flex: 1, alignItems: 'center' }}>trang 2
+            <MyAnimation />
+        </Text>
     )
 }
 
-export const Page3 = (props:any) => {
+export const Page3 = (props: any) => {
     return (
         <Text style={{ backgroundColor: '#33ff00', flex: 1, alignItems: 'center' }}>three</Text>
     )
 }
 
-export const Tabview = (props:any) => {
+export const Tabview = (props: any) => {
     const placHolder = ({ route }) => {
         return (
             <Text>Loading {route.title}..</Text>)
     }
-    
-    const [routes] = React.useState([
+
+    const [routes] = useState([
         { key: 'first', title: 'First' },
         { key: 'second', title: 'Second' },
     ]);
@@ -126,9 +130,57 @@ export const Tabview = (props:any) => {
     )
 }
 
+export default function MyAnimation() {
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+
+    const fadeIn = () => {
+        // Will change fadeAnim value to 1 in 5 seconds
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 3000,
+            useNativeDriver: true
+        }).start();
+    };
+
+    const fadeOut = () => {
+        // Will change fadeAnim value to 0 in 3 seconds
+        Animated.timing(fadeAnim, {
+            toValue: 0,
+            duration: 1000,
+            useNativeDriver: true
+        }).start();
+    };
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <Animated.View
+                style={{
+                    opacity: fadeAnim, // Binds directly
+                    transform: [
+                        {
+                            translateY: fadeAnim.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [150, 0]  // 0 : 150, 0.5 : 75, 1 : 0
+                            }),
+                        }
+                    ],
+                }}
+            >
+                <Text style={styles.fadingText}>Fading View!</Text>
+            </Animated.View>
+            <View style={styles.buttonRow}>
+                <Button title="Fade In View" onPress={fadeIn} />
+                <Button title="Fade Out View" onPress={fadeOut} />
+            </View>
+        </SafeAreaView>
+    );
+}
+
 function Section(props: any) {
+   
     useEffect(() => {
-        console.log("render " + props.header)
+        let h = [props.children]
+        //AO.analysComponent(h)
     })
     return (
         <View style={props.style}>
@@ -149,9 +201,35 @@ function Section(props: any) {
 function equalProps(prop1: any, prop2: any) {
     let ress = prop1.header === prop2.header && prop1.children === prop2.children
     if (prop1.header === 'go to inner') { }
+    const t = new myckl()
     return ress
 }
 
 //dung memo component tranh render khi ko thay doi state
 const Ssmemo = React.memo(Section, equalProps)
 const SSBtn = React.memo(Button)
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    fadingContainer: {
+        padding: 20,
+        backgroundColor: "powderblue"
+    },
+    fadingText: {
+        fontSize: 28
+    },
+    buttonRow: {
+        flexBasis: 100,
+        justifyContent: "space-evenly",
+        marginVertical: 16
+    }
+});
+
+class myckl {
+    #thanh = ""
+}

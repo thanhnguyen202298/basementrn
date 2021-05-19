@@ -17,6 +17,20 @@ export default class example extends React.PureComponent {
     constructor(props: any) {
         super(props)
     }
+    
+    render(){
+      return(
+        <Text>thanh</Text>
+      )
+    }
+}
+
+export class Anm extends example{
+  render(){
+    return(
+      <View><Text>nhueynd</Text></View>
+    )
+  }
 }
 
 export function HomeScreen(props: any) {

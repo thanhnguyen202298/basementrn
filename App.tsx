@@ -14,16 +14,19 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
 import { Detail } from './myts/BaseComponent'
-import {HomeDrawer} from './myts/navigation/NavigationComponent'
+import { HomeDrawer } from './myts/navigation/NavigationComponent'
 import { StoreProvider, getContext } from './myts/StoreProvider'
 import { Button, Text } from 'react-native';
-import {Action} from './myts/action'
+import { Action } from './myts/action'
+import { SafeAreaProvider, safeAreaProvider } from 'react-native-safe-area-context'
+import { ThemeProvider } from 'react-native-elements'
+import {Login} from './scratch/loginComponent'
 
 const MyApp = () => {
 
   const { state, dispatch } = getContext()
   const opendrawme = () => {
-    
+
     dispatch({ type: Action.openDraw, isOpen: true })
   }
   return (
@@ -55,9 +58,13 @@ const Stack = createStackNavigator();
 
 const App = () => {
   return (
-    <StoreProvider>
-      <MyApp />
-    </StoreProvider>
+    <ThemeProvider>
+      <SafeAreaProvider>
+        <StoreProvider>
+          <Login />
+        </StoreProvider>
+      </SafeAreaProvider>
+    </ThemeProvider>
   )
 }
 
